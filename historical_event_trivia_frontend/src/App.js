@@ -20,7 +20,7 @@ function App() {
   const [error, setError] = useState('');
   const [state, setState] = useState(null); // GameState from API
 
-  // Effect to apply theme to document element
+  // Apply theme to <html> for CSS variables
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
   }, [theme]);
@@ -43,7 +43,7 @@ function App() {
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+    setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
 
   const onReveal = async () => {
@@ -79,28 +79,28 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button 
-          className="theme-toggle" 
+        <button
+          className="theme-toggle"
           onClick={toggleTheme}
           aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
         >
           {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
         </button>
 
-        <div style={styles.container}>
-          <h1 style={styles.title}>Historical Event Trivia</h1>
-          {dateLabel ? <div style={styles.date}>{dateLabel}</div> : null}
+        <div className="panel" role="main" aria-label="Historical Event Trivia game">
+          <h1 className="title">Historical Event Trivia</h1>
+          {dateLabel ? <div className="date" aria-live="polite">{dateLabel}</div> : null}
 
           {loading ? (
-            <div style={styles.loading}>Loading game…</div>
+            <div className="loading" role="status" aria-live="polite">Loading game…</div>
           ) : (
             <>
-              {error ? <div style={styles.error} role="alert">{error}</div> : null}
+              {error ? <div className="error" role="alert">{error}</div> : null}
 
               {/* Clues */}
-              <div style={styles.section}>
-                <div style={styles.sectionTitle}>Clues</div>
-                <div style={styles.clues}>
+              <div className="section" aria-labelledby="clues-title">
+                <div id="clues-title" className="section-title">Clues</div>
+                <div className="clues">
                   {(state?.clues || [])
                     .slice(0, state?.clues_revealed || 0)
                     .map((text, idx) => (
@@ -110,7 +110,7 @@ function App() {
               </div>
 
               {/* Guess input and actions */}
-              <div style={styles.section}>
+              <div className="section">
                 <GuessInput
                   onSubmit={onSubmit}
                   onReveal={onReveal}
@@ -120,7 +120,7 @@ function App() {
               </div>
 
               {/* Attempts */}
-              <div style={styles.section}>
+              <div className="section">
                 <AttemptTracker
                   attemptsUsed={state?.attempts_used ?? 0}
                   maxAttempts={state?.max_attempts ?? 5}
@@ -140,47 +140,5 @@ function App() {
     </div>
   );
 }
-
-const styles = {
-  container: {
-    width: 'min(860px, 92vw)',
-    margin: '0 auto',
-    textAlign: 'left',
-  },
-  title: {
-    margin: 0,
-    fontSize: 28,
-    color: 'var(--text-primary, #111827)',
-  },
-  date: {
-    marginTop: 6,
-    color: 'rgba(17,24,39,0.7)',
-    fontSize: 14,
-  },
-  section: {
-    marginTop: 18,
-  },
-  sectionTitle: {
-    fontWeight: 700,
-    marginBottom: 8,
-    color: 'var(--text-primary, #111827)',
-  },
-  clues: {
-    display: 'grid',
-    gap: 10,
-  },
-  loading: {
-    padding: '12px 0',
-    opacity: 0.8,
-  },
-  error: {
-    background: 'rgba(239,68,68,0.1)',
-    color: '#991B1B',
-    border: '1px solid rgba(239,68,68,0.35)',
-    borderRadius: 8,
-    padding: '10px 12px',
-    marginBottom: 8,
-  },
-};
 
 export default App;
