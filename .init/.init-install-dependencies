@@ -1,0 +1,4 @@
+{
+    "command": "npm install",
+    "working_directory": "/home/kavia/workspace/code-generation/historical-event-guessing-game-183366-183376/historical_event_trivia_frontend"
+}
